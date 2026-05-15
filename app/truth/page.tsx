@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { MainLayout } from "@/components/layout/main-layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { EyeOff, BrainCircuit, History, AlertTriangle, ScrollText } from "lucide-react";
@@ -26,7 +25,7 @@ export default function TruthDashboard() {
   }, [supabase]);
 
   return (
-    <MainLayout>
+    <>
       <div className="flex flex-col gap-6 p-6 font-mono text-sm max-w-7xl mx-auto">
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-6">
           <div>
@@ -136,6 +135,6 @@ export default function TruthDashboard() {
 
         </div>
       </div>
-    </MainLayout>
+    </>
   )
 }

@@ -1,6 +1,5 @@
 import React from 'react';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
-import { MainLayout } from '@/components/layout/main-layout';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Network, GitMerge, Layers, Clock, Activity, AlertTriangle, Shield, Magnet, Database, History, Archive, Flame, Battery, Cpu, Brain, HeartCrack, RadioTower, EyeOff, Microscope, Users, Scale, BookOpen, Scroll, Landmark, Ghost } from 'lucide-react';
@@ -97,7 +96,7 @@ export default async function CausalityPage() {
     const civilizationMyths = rawMyths || [];
 
     return (
-        <MainLayout>
+        <>
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
                 
                 {/* Temporal Elasticity State */}
@@ -1089,6 +1088,6 @@ export default async function CausalityPage() {
                     </CardContent>
                 </Card>
             </div>
-        </MainLayout>
+        </>
     );
 }

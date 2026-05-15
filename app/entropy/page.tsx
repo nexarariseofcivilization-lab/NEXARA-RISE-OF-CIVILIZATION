@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { MainLayout } from "@/components/layout/main-layout"
 import { Play, Pause, FastForward, Activity, AlertTriangle, Network, Search, Flame, Cpu, Gauge, Thermometer, Disc, Zap } from "lucide-react"
 import { getSupabase } from "@/lib/supabase";
 
@@ -33,7 +32,7 @@ export default function EntropyDashboard() {
   const maxLoad = governors.reduce((acc: number, curr: any) => acc + Number(curr.max_entropy_budget), 0) || 1;
 
   return (
-    <MainLayout>
+    <>
       <div className="flex flex-col gap-6 p-6 font-mono text-sm max-w-7xl mx-auto">
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-6">
           <div>
@@ -199,7 +198,7 @@ export default function EntropyDashboard() {
         </div>
 
       </div>
-    </MainLayout>
+    </>
   )
 }
 

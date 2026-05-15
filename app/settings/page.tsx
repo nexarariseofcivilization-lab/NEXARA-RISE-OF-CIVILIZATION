@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { MainLayout } from "@/components/layout/main-layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -66,7 +65,7 @@ export default function SettingsDashboard() {
   };
 
   return (
-    <MainLayout>
+    <>
       <div className="flex flex-col gap-6 p-6 font-mono text-sm max-w-5xl mx-auto">
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-6">
           <div>
@@ -260,7 +259,7 @@ export default function SettingsDashboard() {
           
         </div>
       </div>
-    </MainLayout>
+    </>
   )
 }
 

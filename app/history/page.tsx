@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { MainLayout } from "@/components/layout/main-layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, Hash, Users, ArrowRight, Save } from "lucide-react";
@@ -22,7 +21,7 @@ export default function HistoriographyDashboard() {
   }, [supabase]);
 
   return (
-    <MainLayout>
+    <>
       <div className="flex flex-col gap-6 p-6 font-mono text-sm max-w-7xl mx-auto h-full overflow-auto">
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-800 pb-6 shrink-0">
           <div>
@@ -111,6 +110,6 @@ export default function HistoriographyDashboard() {
           )}
         </div>
       </div>
-    </MainLayout>
+    </>
   )
 }
