@@ -10,53 +10,58 @@ import {
     LayoutDashboard, Coins, Users, Landmark, Newspaper, Settings, 
     Globe, Radio, Bell, Search, Activity, ChevronRight, User, 
     Terminal, AlertTriangle, Menu, Map, Home, Briefcase, Car, Zap, Database,
-    ChevronDown, ChevronUp, Sliders, Code, EyeOff, Brain, BookOpen
+    ChevronDown, ChevronUp, Sliders, Code, EyeOff, Brain, BookOpen, Lock, ShieldAlert
 } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { useEffect, useState } from 'react';
 
 const SIDEBAR_ITEMS = [
-    { label: 'Command Center', href: '/', icon: LayoutDashboard, category: 'CORE' },
-    { label: 'Personal Ecosystem', href: '/life', icon: Activity, category: 'CORE' },
-    { label: 'Work & Career', href: '/career', icon: Briefcase, category: 'CORE' },
-    { label: 'Property & Wealth', href: '/property', icon: Home, category: 'CORE' },
-    { label: 'Global Economy', href: '/economy', icon: Coins, category: 'SYSTEMS' },
-    { label: 'Shadow Market', href: '/shadow-market', icon: Terminal, category: 'SYSTEMS' },
-    { label: 'Infrastructure', href: '/infrastructure', icon: Zap, category: 'SYSTEMS' },
-    { label: 'Causal Engine', href: '/causality', icon: AlertTriangle, category: 'SYSTEMS' },
-    { label: 'Entropy & Scaling', href: '/entropy', icon: AlertTriangle, category: 'SYSTEMS' },
-    { label: 'Meta-Governance DSL', href: '/settings', icon: Sliders, category: 'SYSTEMS' },
-    { label: 'Policy Compiler', href: '/policies', icon: Code, category: 'SYSTEMS' },
-    { label: 'Epistemics & Memory', href: '/truth', icon: EyeOff, category: 'SYSTEMS' },
-    { label: 'Agent Kernel', href: '/agents', icon: Brain, category: 'SYSTEMS' },
-    { label: 'Historiography', href: '/history', icon: BookOpen, category: 'SYSTEMS' },
-    { label: 'Institutions', href: '/institutions', icon: Landmark, category: 'SYSTEMS' },
-    { label: 'National Politics', href: '/politics', icon: Landmark, category: 'SYSTEMS' },
-    { label: 'Society & Citizens', href: '/society', icon: Users, category: 'SYSTEMS' },
-    { label: 'World Map', href: '/map', icon: Map, category: 'SYSTEMS' },
-    { label: 'Core Civ Node', href: '/ccn', icon: Database, category: 'MEGASTRUCTURE' },
-    { label: 'AI News Network', href: '/media', icon: Newspaper, category: 'INTELLIGENCE' },
-    { label: 'Settings', href: '/settings', icon: Settings, category: 'USER' },
+    { label: 'Command Center', href: '/', icon: LayoutDashboard, category: 'CORE', status: 'ACTIVE' },
+    { label: 'Personal Ecosystem', href: '/life', icon: Activity, category: 'CORE', status: 'ACTIVE' },
+    { label: 'Work & Career', href: '/career', icon: Briefcase, category: 'CORE', status: 'ACTIVE' },
+    { label: 'Property & Wealth', href: '/property', icon: Home, category: 'CORE', status: 'ACTIVE' },
+    { label: 'Global Economy', href: '/economy', icon: Coins, category: 'SYSTEMS', status: 'ACTIVE' },
+    { label: 'Shadow Market', href: '/shadow-market', icon: Terminal, category: 'SYSTEMS', status: 'RESTRICTED' },
+    { label: 'Infrastructure', href: '/infrastructure', icon: Zap, category: 'SYSTEMS', status: 'ACTIVE' },
+    { label: 'Causal Engine', href: '/causality', icon: AlertTriangle, category: 'SYSTEMS', status: 'ACTIVE' },
+    { label: 'Entropy & Scaling', href: '/entropy', icon: AlertTriangle, category: 'SYSTEMS', status: 'ACTIVE' },
+    { label: 'Meta-Governance DSL', href: '/settings', icon: Sliders, category: 'SYSTEMS', status: 'ACTIVE' },
+    { label: 'Policy Compiler', href: '/policies', icon: Code, category: 'SYSTEMS', status: 'ACTIVE' },
+    { label: 'Epistemics & Memory', href: '/truth', icon: EyeOff, category: 'SYSTEMS', status: 'LOCKED' },
+    { label: 'Agent Kernel', href: '/agents', icon: Brain, category: 'SYSTEMS', status: 'LOCKED' },
+    { label: 'Historiography', href: '/history', icon: BookOpen, category: 'SYSTEMS', status: 'ACTIVE' },
+    { label: 'Institutions', href: '/institutions', icon: Landmark, category: 'SYSTEMS', status: 'ACTIVE' },
+    { label: 'National Politics', href: '/politics', icon: Landmark, category: 'SYSTEMS', status: 'ACTIVE' },
+    { label: 'Society & Citizens', href: '/society', icon: Users, category: 'SYSTEMS', status: 'ACTIVE' },
+    { label: 'World Map', href: '/map', icon: Map, category: 'SYSTEMS', status: 'ACTIVE' },
+    { label: 'Core Civ Node', href: '/ccn', icon: Database, category: 'MEGASTRUCTURE', status: 'ENCRYPTED' },
+    { label: 'AI News Network', href: '/media', icon: Newspaper, category: 'INTELLIGENCE', status: 'ACTIVE' },
+    { label: 'Settings', href: '/settings', icon: Settings, category: 'USER', status: 'ACTIVE' },
 ];
 
-function SidebarItem({ label, href, icon: Icon, category, onClick }: { label: string, href: string, icon: any, category: string, onClick?: () => void }) {
+function SidebarItem({ label, href, icon: Icon, category, status, onClick }: { label: string, href: string, icon: any, category: string, status: string, onClick?: () => void }) {
     const pathname = usePathname();
     const isActive = pathname === href;
+    const isLocked = status === 'LOCKED' || status === 'ENCRYPTED' || status === 'RESTRICTED';
     
     return (
         <Link 
-            href={href}
+            href={isLocked ? '#' : href}
             onClick={onClick}
             className={cn(
-                "group flex items-center space-x-3 px-3 py-2 rounded-md text-xs transition-all relative",
+                "group flex items-center justify-between px-3 py-2 rounded-none text-[11px] font-mono transition-all relative border-l-2",
                 isActive 
-                    ? "bg-zinc-900 text-emerald-400 font-medium border border-zinc-800/50" 
-                    : "text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 border border-transparent"
+                    ? "bg-zinc-900/50 text-emerald-400 border-emerald-500" 
+                    : isLocked
+                        ? "text-zinc-600 border-transparent hover:bg-zinc-950 cursor-not-allowed opacity-50"
+                        : "text-zinc-400 hover:bg-zinc-900/30 hover:text-zinc-200 border-transparent hover:border-zinc-700"
             )}
         >
-            {isActive && <div className="absolute left-0 top-1.5 bottom-1.5 w-0.5 bg-emerald-500 rounded-r-full" />}
-            <Icon className={cn("w-4 h-4 transition-colors", isActive ? "text-emerald-500" : "text-zinc-500 group-hover:text-zinc-300")} />
-            <span>{label}</span>
+            <div className="flex items-center space-x-3">
+                <Icon className={cn("w-3.5 h-3.5", isActive ? "text-emerald-500 animate-pulse" : "text-zinc-500")} />
+                <span className={cn("tracking-wide uppercase", isLocked && "line-through decoration-zinc-700")}>{label}</span>
+            </div>
+            {isLocked && <Lock className="w-3 h-3 text-zinc-600" />}
         </Link>
     );
 }
@@ -120,72 +125,82 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     return (
         <div className="flex flex-col h-screen overflow-hidden bg-black text-gray-300 font-sans selection:bg-emerald-500/30">
             {/* Top Bar - High Density */}
-            <header className="h-12 border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md flex items-center justify-between px-4 shrink-0 z-20">
-                <div className="flex items-center space-x-2 md:space-x-6">
+            <header className="h-14 border-b border-zinc-800/80 bg-zinc-950/95 backdrop-blur-md flex items-center justify-between px-4 shrink-0 z-20">
+                <div className="flex items-center space-x-4 md:space-x-8">
                     <button 
                         className="md:hidden p-1 rounded text-zinc-400 hover:text-white"
                         onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
                     >
                         <Menu className="w-5 h-5" />
                     </button>
-                    <div className="flex items-center space-x-2 md:space-x-3 md:border-r md:border-zinc-800 md:pr-6">
-                        <Radio className="w-4 h-4 text-emerald-500 animate-pulse hidden sm:block" />
-                        <span className="font-bold tracking-widest text-emerald-500 text-sm hidden sm:block">NEXARA_OS</span>
-                        <span className="text-emerald-500 font-bold sm:hidden">NX</span>
-                        <span className="text-zinc-600 font-mono text-[10px] sm:text-xs">v1.0.4a</span>
+                    <div className="flex items-center space-x-3 md:border-r md:border-zinc-800 md:pr-8">
+                        <div className="flex items-center justify-center font-bold font-mono tracking-widest text-emerald-500 text-lg sm:text-xl relative group">
+                            <span className="opacity-70 group-hover:opacity-100 transition-opacity">[</span>
+                            <span className="mx-1">NXR</span>
+                            <span className="opacity-70 group-hover:opacity-100 transition-opacity">]</span>
+                            <div className="absolute -right-2 top-0 w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse hidden sm:block"></div>
+                        </div>
+                        <span className="text-zinc-600 font-mono text-[10px] sm:text-[11px] hidden sm:block tracking-widest uppercase">
+                            {'//'} KERNEL v1.0.4
+                        </span>
                     </div>
                     
                     {/* Command Search */}
-                    <div className="hidden md:flex items-center space-x-2 bg-zinc-900 border border-zinc-800 rounded px-3 py-1.5 w-64">
-                        <Search className="w-3.5 h-3.5 text-zinc-500" />
+                    <div className="hidden md:flex items-center space-x-2 bg-zinc-950 border border-zinc-800 rounded px-3 py-1 w-72 focus-within:border-emerald-500/50 focus-within:ring-1 focus-within:ring-emerald-500/20 transition-all">
+                        <Terminal className="w-3.5 h-3.5 text-zinc-500" />
                         <input 
                             type="text" 
-                            placeholder="Run command or search..." 
-                            className="bg-transparent border-none outline-none text-xs w-full text-zinc-300 placeholder:text-zinc-600"
+                            placeholder="Execute command..." 
+                            className="bg-transparent border-none outline-none text-xs w-full text-zinc-300 placeholder:text-zinc-600 font-mono"
                         />
-                        <div className="flex items-center space-x-1">
-                            <kbd className="bg-zinc-800 px-1.5 py-0.5 rounded text-[10px] font-mono text-zinc-400">⌘</kbd>
-                            <kbd className="bg-zinc-800 px-1.5 py-0.5 rounded text-[10px] font-mono text-zinc-400">K</kbd>
+                        <div className="flex items-center space-x-1 opacity-50">
+                            <kbd className="bg-zinc-800 px-1 rounded text-[9px] font-mono text-zinc-400">⌘K</kbd>
                         </div>
                     </div>
                 </div>
 
-                <div className="flex items-center space-x-2 md:space-x-6 text-xs uppercase tracking-widest text-zinc-500">
-                    <div className="hidden lg:flex items-center space-x-4 border-r border-zinc-800 pr-6">
+                <div className="flex items-center space-x-2 md:space-x-6 text-xs uppercase tracking-widest text-zinc-500 font-mono">
+                    <div className="hidden xl:flex items-center space-x-6 border-r border-zinc-800 pr-6">
                         <div className="flex items-center space-x-2">
-                            <span>Status:</span>
-                            <span className="text-emerald-500 font-bold flex items-center">
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></div>
-                                SECURE
+                            <span className="text-zinc-600">POPULATION:</span>
+                            <span className="text-zinc-300 font-medium">278.4M</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <span className="text-zinc-600">STABILITY:</span>
+                            <span className="text-emerald-500 font-medium flex items-center">
+                                78.4%
+                                <Activity className="w-3 h-3 ml-1" />
                             </span>
                         </div>
                         {mounted && globalTime && (
-                            <div className="flex items-center space-x-2">
-                                <span>Cycle:</span>
-                                <span className="text-zinc-300 font-mono">{formatGlobalDate(globalTime)}</span>
+                            <div className="flex items-center space-x-2 bg-zinc-900/50 px-2 py-0.5 rounded border border-zinc-800">
+                                <span className="text-emerald-500 animate-pulse text-[14px] leading-none mb-0.5">●</span>
+                                <span className="text-zinc-300 tracking-wider">
+                                    CYCLE {formatGlobalDate(globalTime)}
+                                </span>
                             </div>
                         )}
                     </div>
 
                     <div className="flex items-center space-x-2 md:space-x-4">
-                        <button className="text-zinc-400 hover:text-white transition-colors relative">
-                            <Bell className="w-4 h-4" />
-                            <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                        <button className="text-zinc-500 hover:text-amber-400 transition-colors relative p-1">
+                            <AlertTriangle className="w-4 h-4" />
+                            <span className="absolute 1 top-0 right-0 w-1.5 h-1.5 bg-amber-500 rounded-full animate-ping"></span>
                         </button>
-                        <div className="flex items-center space-x-2 cursor-pointer hover:bg-zinc-900 pr-2 md:px-2 py-1 rounded transition-colors border border-transparent hover:border-zinc-800">
-                            <div className="w-6 h-6 rounded bg-emerald-900 border border-emerald-700 flex items-center justify-center text-emerald-400">
-                                <User className="w-3.5 h-3.5" />
+                        <div className="flex items-center space-x-3 bg-zinc-900/40 border border-zinc-800/80 px-2 py-1 rounded">
+                            <div className="w-6 h-6 rounded-sm bg-red-950 border border-red-900 flex items-center justify-center text-red-500 shadow-[0_0_10px_rgba(220,38,38,0.2)]">
+                                <ShieldAlert className="w-3.5 h-3.5" />
                             </div>
-                            <div className="hidden sm:flex flex-col items-start leading-none">
-                                <span className="text-[10px] text-zinc-300 font-bold">ADMIN ROOT</span>
-                                <span className="text-[9px] text-zinc-500">Presidential access</span>
+                            <div className="hidden sm:flex flex-col items-start leading-none py-0.5">
+                                <span className="text-[10px] text-red-400 font-bold tracking-widest">AUTH: OMEGA</span>
+                                <span className="text-[9px] text-zinc-500 tracking-wider mt-0.5">ROOT OVERRIDE</span>
                             </div>
                         </div>
                         <button 
                             onClick={toggleRightPanel}
-                            className={cn("hidden xl:block p-1.5 rounded transition-colors", rightPanelOpen ? "bg-zinc-800 text-white" : "text-zinc-400 hover:bg-zinc-900 hover:text-white")}
+                            className={cn("hidden lg:block p-1.5 rounded transition-colors", rightPanelOpen ? "text-emerald-500 bg-zinc-900/50" : "text-zinc-500 hover:text-white")}
                         >
-                            <Menu className="w-4 h-4" />
+                            <LayoutDashboard className="w-4 h-4" />
                         </button>
                     </div>
                 </div>
@@ -209,12 +224,12 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                         {categories.map(category => {
                             const isCollapsed = collapsedCategories[category];
                             return (
-                                <div key={category} className="mb-2">
+                                <div key={category} className="mb-4">
                                     <button 
                                         onClick={() => toggleCategory(category)}
-                                        className="w-full flex items-center justify-between text-[10px] font-semibold text-zinc-600 uppercase tracking-widest mb-1 px-2 py-1 hover:text-zinc-300 transition-colors"
+                                        className="w-full flex items-center justify-between text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] mb-2 px-2 py-1 hover:text-zinc-300 transition-colors bg-zinc-900/20"
                                     >
-                                        <span>{category}</span>
+                                        <span>{'// '} {category}</span>
                                         {isCollapsed ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />}
                                     </button>
                                     {!isCollapsed && (
@@ -226,6 +241,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                                                     href={item.href}
                                                     icon={item.icon}
                                                     category={item.category}
+                                                    status={item.status}
                                                     onClick={() => setMobileSidebarOpen(false)}
                                                 />
                                             ))}
@@ -246,45 +262,58 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
                 {/* Right Analytics Sidebar - Realtime Data */}
                 {rightPanelOpen && (
-                    <aside className="w-72 border-l border-zinc-800 bg-zinc-950/80 hidden xl:flex flex-col shrink-0 overflow-y-auto custom-scrollbar z-10 shadow-[-10px_0_30px_-15px_rgba(0,0,0,0.5)]">
-                        <div className="p-4 border-b border-zinc-800 sticky top-0 bg-zinc-950/90 backdrop-blur-sm z-10">
-                            <h3 className="text-xs uppercase tracking-widest font-bold text-zinc-300 flex items-center">
-                                <Activity className="w-3.5 h-3.5 mr-2 text-emerald-500" />
-                                Realtime Stream
+                    <aside className="w-80 border-l border-zinc-800/80 bg-zinc-950/95 hidden lg:flex flex-col shrink-0 overflow-y-auto custom-scrollbar z-10 font-mono shadow-2xl relative">
+                        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900/10 via-transparent to-transparent"></div>
+                        <div className="p-4 border-b border-zinc-800/80 sticky top-0 bg-zinc-950/95 backdrop-blur-md z-10">
+                            <h3 className="text-[11px] uppercase tracking-widest font-bold text-zinc-400 flex items-center">
+                                <Radio className="w-3.5 h-3.5 mr-2 text-emerald-500 animate-pulse" />
+                                TELEMETRY STREAM
                             </h3>
                         </div>
-                        <div className="p-4 space-y-4">
-                            {/* Alert Box */}
-                            <div className="bg-red-950/20 border border-red-900/30 p-3 rounded-lg">
-                                <div className="flex items-start space-x-2">
-                                    <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
-                                    <div>
-                                        <h4 className="text-xs font-bold text-red-400 uppercase">Sector 4 Unrest</h4>
-                                        <p className="text-[11px] text-zinc-400 mt-1">Crime rate spiked by 2.4% in the last hour. Public sentiment dropping.</p>
+                        <div className="p-4 space-y-6 relative z-10">
+                            {/* MACRO ALERTS */}
+                            <div className="space-y-2">
+                                <div className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest mb-2 border-b border-zinc-800/50 pb-1">MACRO EVENTS</div>
+                                <div className="bg-red-950/20 border border-red-900/50 rounded p-3 relative overflow-hidden group">
+                                    <div className="absolute top-0 left-0 w-0.5 h-full bg-red-500 group-hover:shadow-[0_0_8px_rgba(239,68,68,0.8)] transition-shadow"></div>
+                                    <div className="flex items-start space-x-3">
+                                        <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
+                                        <div className="w-full">
+                                            <div className="flex justify-between items-center mb-1">
+                                                <h4 className="text-[11px] font-bold text-red-400 uppercase tracking-wide">Sector 4 Unrest</h4>
+                                                <span className="text-[9px] text-red-500/70 font-mono">SEV-1</span>
+                                            </div>
+                                            <p className="text-[10px] text-red-200/60 leading-relaxed font-sans cursor-pointer hover:text-red-200">
+                                                Crime rate spiked by 2.4% in the last hour. Public sentiment dropping. Projected GDP impact: -0.3%.
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             
-                            {/* Live Feed */}
-                            <div className="space-y-3 relative before:absolute before:inset-0 before:ml-[9px] before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-zinc-800 before:to-transparent">
-                                {logs.map((log, i) => (
-                                    <div key={i} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                                        <div className={`flex items-center justify-center w-5 h-5 rounded-full border border-zinc-700 bg-zinc-900 z-10 mx-auto shrink-0 transition-colors ${log.type === 'error' ? 'text-red-500 border-red-500' : log.type === 'warn' ? 'text-amber-500 border-amber-500' : 'text-emerald-500 border-emerald-500'}`}>
-                                            <div className="w-1.5 h-1.5 bg-current rounded-full" />
-                                        </div>
-                                        <div className="w-[calc(100%-2rem)] md:w-[calc(50%-1.5rem)] p-3 rounded-lg bg-zinc-900/40 border border-zinc-800/50 hover:bg-zinc-800/40 transition-colors">
-                                            <div className="flex items-center justify-between mb-1">
-                                                <span className={cn("text-[10px] font-bold uppercase", 
-                                                    log.type === 'error' ? 'text-red-500' : 
-                                                    log.type === 'warn' ? 'text-amber-500' : 'text-emerald-500'
-                                                )}>{log.type}</span>
-                                                <time className="text-[10px] text-zinc-500 font-mono">{log.time}</time>
+                            {/* MICRO FEED */}
+                            <div className="space-y-2">
+                                <div className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest mb-3 border-b border-zinc-800/50 pb-1">MICRO FEED</div>
+                                <div className="space-y-3 relative before:absolute before:inset-0 before:ml-[5px] before:translate-x-0 before:h-full before:w-[1px] before:bg-zinc-800/50">
+                                    {logs.map((log, i) => (
+                                        <div key={i} className="relative flex items-start group">
+                                            <div className={`flex items-center justify-center w-3 h-3 rounded-full border bg-zinc-950 z-10 shrink-0 mt-1 mr-3 transition-colors ${log.type === 'error' ? 'border-red-500 shadow-[0_0_5px_rgba(239,68,68,0.5)]' : log.type === 'warn' ? 'border-amber-500' : 'border-zinc-700'}`}>
+                                                <div className={`w-1 h-1 rounded-full ${log.type === 'error' ? 'bg-red-500' : log.type === 'warn' ? 'bg-amber-500' : 'bg-zinc-600'}`} />
                                             </div>
-                                            <h5 className="text-[11px] font-semibold text-zinc-200">System Log</h5>
-                                            <p className="text-[10px] text-zinc-400 mt-0.5 truncate" title={log.msg}>{log.msg}</p>
+                                            <div className="w-full">
+                                                <div className="flex items-center justify-between mb-0.5">
+                                                    <span className={cn("text-[9px] font-bold uppercase tracking-wider", 
+                                                        log.type === 'error' ? 'text-red-400' : 
+                                                        log.type === 'warn' ? 'text-amber-400' : 'text-zinc-500'
+                                                    )}>{log.type} {'// SYSTEM'}</span>
+                                                    <time className="text-[9px] text-zinc-600 font-mono">{log.time}</time>
+                                                </div>
+                                                <h5 className={cn("text-[11px] mb-0.5 font-sans", log.type === 'error' ? 'text-red-200' : 'text-zinc-300')}>{log.msg.substring(0, 30)}...</h5>
+                                                <p className="text-[10px] text-zinc-500 font-sans cursor-pointer hover:text-zinc-300 transition-colors" title={log.msg}>{log.msg}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </aside>
@@ -292,16 +321,17 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
             </div>
             
             {/* Bottom Ticker */}
-            <footer className="h-8 border-t border-zinc-800 bg-zinc-950 flex items-center px-4 overflow-hidden shrink-0 z-20 text-[10px] font-mono whitespace-nowrap">
-                <div className="text-zinc-500 flex items-center mr-4 border-r border-zinc-800 pr-4 shrink-0">
-                    <Activity className="w-3 h-3 mr-1" />
-                    TICKER
+            <footer className="h-8 border-t border-zinc-800/80 bg-zinc-950 flex items-center px-4 overflow-hidden shrink-0 z-20 text-[10px] font-mono whitespace-nowrap shadow-[0_-5px_15px_-10px_rgba(0,0,0,0.5)]">
+                <div className="text-emerald-500 font-bold tracking-widest flex items-center mr-4 border-r border-zinc-800/80 pr-4 shrink-0 bg-zinc-950 z-10 w-[120px]">
+                    <Sliders className="w-3.5 h-3.5 mr-2" />
+                    LIVE DATA
                 </div>
-                <div className="flex items-center space-x-6 animate-ticker text-zinc-400">
-                    <span className="flex items-center"><span className="text-zinc-500 mr-2">POLL</span> 42.5% <span className="text-red-500 ml-2">▼ 1.5%</span></span>
-                    <span className="flex items-center"><span className="text-zinc-500 mr-2">GDP</span> ${economy.gdp.toFixed(2)}T</span>
-                    <span className="flex items-center"><span className="text-zinc-500 mr-2">INFLATION</span> {economy.global_inflation.toFixed(2)}%</span>
-                    <span className="flex items-center"><span className="text-zinc-500 mr-2">UNEMPLOYMENT</span> {economy.global_unemployment.toFixed(2)}%</span>
+                <div className="flex items-center space-x-8 animate-ticker text-zinc-400 opacity-90">
+                    <span className="flex items-center"><span className="text-zinc-600 mr-2 tracking-widest">POLL</span> 42.5% <span className="text-red-500 ml-2">▼ 1.5%</span></span>
+                    <span className="flex items-center"><span className="text-zinc-600 mr-2 tracking-widest">GDP</span> ${economy.gdp.toFixed(2)}T <span className="text-emerald-500 ml-2">▲ 0.2%</span></span>
+                    <span className="flex items-center"><span className="text-zinc-600 mr-2 tracking-widest">INFLATION</span> <span className={economy.global_inflation > 5 ? "text-red-400 ml-1" : "text-emerald-400 ml-1"}>{economy.global_inflation.toFixed(2)}%</span></span>
+                    <span className="flex items-center"><span className="text-zinc-600 mr-2 tracking-widest">UNEMPLOYMENT</span> <span className="text-amber-400">{economy.global_unemployment.toFixed(2)}%</span></span>
+                    <span className="flex items-center"><span className="text-zinc-600 mr-2 tracking-widest">GRID LOAD</span> <span className="text-amber-400 ml-1">88.2%</span></span>
                 </div>
             </footer>
         </div>

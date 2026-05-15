@@ -172,6 +172,7 @@ export default function CareerDashboard() {
                 // Natural recovery during off-duty handled somewhat by tickGlobalTime or manually here
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [globalTime, isCheckedIn]);
 
     const generateRandomWorkEvent = (): WorkEvent => {
